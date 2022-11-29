@@ -1,0 +1,284 @@
+<!-- Nkindmitem: Joseph Rodriguez	
+     Course: 235.01
+     HomeWork: #2
+     Git-Hub: https://github.com/htsx/Homework2
+-->
+<!DOCTYPE html>
+
+<html>
+
+<head>
+     <title> Yahtzee </title>
+     <style type="text/css">
+          h1 {
+               text-align: center;
+          }
+
+          div.a {
+               text-align: center;
+               margin-bottom: 3em;
+          }
+
+          table.a {
+               margin-left: auto;
+               margin-right: auto;
+          }
+
+          td.a {
+               font-family: Arial;
+               font-weight: bold;
+               text-align: right;
+          }
+
+          td.b {
+               background-color: #AEAFFF;
+               border: 2px inset gray;
+               width: 2em;
+               height: 1.2em;
+          }
+
+          td.c {
+               width: 60%;
+               text-align: center;
+          }
+
+          button.a {
+               font-family: 'Times New roman';
+               font-size: 14pt;
+               background-color: #5B00CA;
+               color: #F6E3DC;
+               font-weight: bold;
+               text-align: center;
+          }
+
+          /* button.b {} */
+     </style>
+</head>
+
+
+<body>
+     <h1> Yahtzee </h1>
+
+
+     <div class="a">
+          <img id="d0" onClick="hold(0)" src="pix/dice0.gif">
+          <img id="d1" onClick="hold(1)" src="pix/dice0.gif">
+          <img id="d2" onClick="hold(2)" src="pix/dice0.gif">
+          <img id="d3" onClick="hold(3)" src="pix/dice0.gif">
+          <img id="d4" onClick="hold(4)" src="pix/dice0.gif">
+     </div>
+
+
+     <table class="a">
+          <tr>
+               <td class="a"> 1's </td>
+               <td class="b" id="s1" onclick="score(1)"></td>
+               <td rowspan="5"> </td>
+               <td class="c" rowspan="5">
+                    <button onclick="roll()" class="a">Roll</button>
+               </td>
+          </tr>
+          <tr>
+               <td class="a"> 2's </td>
+               <td class="b" id="s2" onclick="score(2)"></td>
+          </tr>
+          <tr>
+               <td class="a"> 3's </td>
+               <td class="b" id="s3" onclick="score(3)"></td>
+          </tr>
+          <tr>
+               <td class="a"> 4's </td>
+               <td class="b" id="s4" onclick="score(4)"></td>
+          </tr>
+          <tr>
+               <td class="a"> 5's </td>
+               <td class="b" id="s5" onclick="score(5)"></td>
+          </tr>
+          <tr>
+               <td class="a"> 6's </td>
+               <td class="b" id="s6" onclick="score(6)"></td>
+               <td rowspan="5"> </td>
+
+               <td class="c" rowspan="5">
+                    <button class="b" onclick="window.location.reload()">New Game</button>
+               </td>
+          </tr>
+          <tr>
+               <td class="a"> 3 of a Kind </td>
+               <td class="b" id="s7" onclick="match_of_3()"></td>
+          </tr>
+          <tr>
+               <td class="a"> 4 of a Kind </td>
+               <td class="b" id="s8" onclick="match_of_4()"></td>
+          </tr>
+          <tr>
+               <td class="a"> Yahtzee </td>
+               <td class="b" id="s9" onclick="yahtzee()"></td>
+          </tr>
+          <tr>
+               <td class="a"> Total </td>
+               <td class="b" id="total"></td>
+          </tr>
+
+     </table>
+
+     <script>
+
+          const dice = [0, 0, 0, 0, 0]
+          const block_roll = [false, false, false, false, false]
+          let sum = 0
+          const dice_count = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+          const total_score = []
+
+          function roll() {
+
+               for (let i = 1; i <= 6; i++) {
+                    dice_count[i] = 0;
+
+               }
+
+
+               for (let i = 0; i < 5; i++) {
+
+                    if (!block_roll[i]) {
+
+                         const image = document.getElementById("d" + i)
+
+                         dice[i] = Math.floor(6 * Math.random()) + 1;
+
+                         image.src = "pix/dice" + dice[i] + ".gif";
+                    }
+                    dice_count[dice[i]]++;
+                    console.log(dice);
+               }
+
+          }
+
+
+
+          function score(X) {
+
+               const t = document.getElementById("s" + X);
+               let cal = X * dice_count[X];
+               t.innerHTML = cal
+
+               total_score.push(cal)
+               roll_total(total_score)
+
+          }
+
+
+          function hold(x) {
+               const t = document.getElementById("d" + x);
+               block_roll[x] = !block_roll[x];
+
+               if (block_roll[x]) {
+                    t.src = "pix/diceX" + dice[x] + ".gif";
+               }
+               else {
+                    t.src = "pix/dice" + dice[x] + ".gif";
+               }
+
+          }
+
+
+
+          function roll_total(score) {
+               let a = 0
+               const text = document.getElementById('total')
+
+               for (i in score) {
+                    a += score[i]
+               }
+
+               text.innerHTML = a
+               console.log(a);
+          }
+
+
+
+          function match_of_3() {
+               const score = document.getElementById("s7")
+               const kind = {}
+               dice.forEach(item => {
+                    if (kind[item]) {
+                         kind[item] += 1;
+                    } else {
+                         kind[item] = 1;
+                    }
+               })
+
+               console.log(kind);
+
+               for (item in kind) {
+                    if (kind[item] === 3) {
+                         const count = item * 3
+                         score.innerHTML = count
+                         total_score.push(count)
+                         roll_total(total_score)
+                         console.log(count);
+                    } else {
+                         score.innerHTML = 0
+                    }
+               }
+          }
+
+
+          function match_of_4() {
+               const score = document.getElementById("s8")
+               const kind = {}
+               dice.forEach(item => {
+                    if (kind[item]) {
+                         kind[item] += 1;
+                    } else {
+                         kind[item] = 1;
+                    }
+               })
+
+               console.log(kind);
+
+               for (item in kind) {
+                    if (kind[item] === 4) {
+                         const count = item * 4
+                         score.innerHTML = count
+                         total_score.push(count)
+                         roll_total(total_score)
+                         console.log(count);
+                    } else {
+                         score.innerHTML = 0
+                    }
+               }
+          }
+
+          function yahtzee() {
+               const score = document.getElementById("s9")
+               const kind = {}
+               dice.forEach(item => {
+                    if (kind[item]) {
+                         kind[item] += 1;
+                    } else {
+                         kind[item] = 1;
+                    }
+               })
+
+               console.log(kind);
+
+               for (item in kind) {
+                    if (kind[item] === 5) {
+                         const count = item * 5
+                         score.innerHTML = count
+                         total_score.push(count)
+                         roll_total(total_score)
+                         console.log(count);
+                    } else {
+                         score.innerHTML = 0
+                    }
+               }
+          }
+
+
+
+     </script>
+</body>
+
+</html>
